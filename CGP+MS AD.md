@@ -7,6 +7,10 @@ wget https://raw.githubusercontent.com/gitpan/CGP-CLI/master/lib/CGP/CLI.pm
 apt install libauthen-simple-ldap-perl ldap-utils
 ```
 ### Настраиваем  
+проверяем доступ к ldap  
+```
+ldapsearch -H ldap://DomainController -x -b "" -s base -LLL
+```
 проверяем, что пользователи из нужной группы ищутся на хосте
 ```
 ldapsearch -x -D "UserForAuth@ELAVT" -W -h DomainController -b "dc=company,dc=name,dc=ru" "sAMAccountName=DomainUser"
