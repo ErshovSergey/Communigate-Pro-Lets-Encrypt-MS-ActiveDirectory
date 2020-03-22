@@ -3,8 +3,10 @@
 # для работы необходимо включить доступ для CLI для 127.0.0.1
 # для этого указать адрес 127.0.0.1 в качестве клиентского - Users\Domains\<Domain name>\Domain Settings поле Client IP Adreesses
 # разрешить CLI для клиентских адресов - Settings\Services\HTTPU секция Sub-protocols параметр CLI установить в clients
-
+# После первого успешного выполнения установить 
+# Users\Domains\<Domain name>\Security\SSL\TLS параметр PKI Services в Enabled
 # получение ключа, сертификата и цепочки остается за пределами этого скрипта
+
 # файл ключа
 le_key=/home/DOCKER_DATA/guacomole/nginx-le/etc/ssl/le-key.pem
 # файл сертификата
