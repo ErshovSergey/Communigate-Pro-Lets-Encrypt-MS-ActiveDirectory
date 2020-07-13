@@ -11,3 +11,35 @@
 - Sent Items  
 - Tasks  
 - Trash
+
+Для существующих пользователей необходимо создать недостающие папки - выполнить команду   
+```
+find <путь до папки, где хранятся почтовые ящики> -name "*.macnt" -exec <путь до скрипта>/create_folders.sh {} \;
+```
+Скрипт create_folders.sh
+```
+#!/bin/sh
+
+echo Folder \"$1\"
+echo "Press Ctrl+^C for stop..."
+sleep 2
+
+create_folder (){
+  mkdir "$1/$2" && echo Create folder  \"$2\"
+if [ $? -eq 0 ]
+then
+  echo '   done.'
+fi
+}
+
+echo Create folders in \"$1\"
+create_folder $1 Calendar.mslc
+create_folder $1 Contacts.mslc
+create_folder $1 Drafts.mslc
+create_folder $1 Notes.mslc
+create_folder $1 'Sent Items.mslc'
+create_folder $1 Tasks.mslc
+create_folder $1 Trash
+
+exit 0
+```
