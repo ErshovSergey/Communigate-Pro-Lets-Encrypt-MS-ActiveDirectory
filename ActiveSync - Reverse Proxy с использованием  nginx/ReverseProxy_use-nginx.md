@@ -45,7 +45,7 @@ exit 0
 ```
 ## Для новых пользователей добавить в шаблон создание необходимых папок  
 *Пользователи\Домены\<Название домена>\Шаблон\Установки почты* 
-![to Folder](./toFolder.png)
+![to Folder](./inFolders.png)
 
 раздел *Дополнительные Папки*
-![Additional Folders](./inFolders.png)
+![Additional Folders](./folder.png)
