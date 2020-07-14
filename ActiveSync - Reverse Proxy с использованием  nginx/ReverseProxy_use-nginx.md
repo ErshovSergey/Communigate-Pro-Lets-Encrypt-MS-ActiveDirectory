@@ -48,4 +48,4 @@ exit 0
 ![to Folder](./toFolder.png)
 
 раздел *Дополнительные Папки*
-![Additional Folders](./folder.png)
+![Additional Folders](./inFolders.png)
