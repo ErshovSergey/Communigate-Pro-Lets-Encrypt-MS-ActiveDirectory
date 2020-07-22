@@ -49,3 +49,36 @@ exit 0
 
 раздел *Дополнительные Папки*
 ![Additional Folders](./folder.png)
+
+```
+server {
+    listen   443 ssl;
+    server_name airsync.foo.bar.ru;
+    # максимальный размер файла
+    client_max_body_size 100M;
+
+    root /srv/docroot/;
+    ssl_certificate         SSL_CERT;
+    ssl_certificate_key     SSL_KEY;
+    ssl_trusted_certificate SSL_CHAIN_CERT;
+    ssl_session_timeout     5m;
+
+    location ^~ / {
+      proxy_pass   http://a.aa.aaa.aaaa:aaaaa/;
+      proxy_pass_request_headers on;
+      proxy_connect_timeout       600;
+      proxy_send_timeout          600;
+      send_timeout                600;
+      proxy_buffering off;
+      proxy_http_version 1.1;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection $http_connection;
+      proxy_read_timeout 3600;
+      proxy_pass_header Date;
+      proxy_pass_header Server;
+      proxy_pass_header Authorization;
+  }
+
+}
+```
