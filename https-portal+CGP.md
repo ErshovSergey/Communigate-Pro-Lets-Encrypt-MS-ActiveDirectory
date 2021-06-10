@@ -1,9 +1,12 @@
-### Использование сертификата полученного от LetsEncrypt в CommunigatePro
+### Использование сертификата полученного от LetsEncrypt в CommunigatePro  
+#### На хосте CGP https-portal  
 - Разворачивается "прокси" [https-portal](https://github.com/SteveLTN/https-portal).  
 - Полученные сертификаты ssl копируются на сервер CGP (нужны файлы domain.csr, domain.key, signed.crt)  
 ```/usr/bin/rsync -az --copy-links /path/to/folde/https-portal-data/<DOMAINNAME>/production/ USERNAME@HOSTNAME:/path/to/folder/CommuniGate_DATA/path/to/cert/```
+- Добавляем в cron
 
-- Запускается скрипт на хосте CGP  
+#### На хосте CGP
+- Скрипт для добавления сертификата в CGP  
 _add_cert.sh_
 ```
 #!/bin/sh
@@ -42,7 +45,9 @@ curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli
   --data-urlencode "command=updatedomainsettings ${domain_name} \
   {CAChain=[${le_chain_crt}];}"
 ```
-- Добавляем в cron строки (две строки)
+- Добавляем в cron строки (две строки) на хосте CGP  
+```
 7 8 * * * /path/to/script/folder/add_cert.sh
 8 8 * * * /path/to/script/folder/add_cert.sh
+```
 
