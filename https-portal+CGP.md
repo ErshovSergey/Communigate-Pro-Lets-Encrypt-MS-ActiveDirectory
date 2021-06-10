@@ -2,7 +2,7 @@
 #### На хосте CGP https-portal  
 - Разворачивается "прокси" [https-portal](https://github.com/SteveLTN/https-portal).  
 - Полученные сертификаты ssl копируются на сервер CGP (нужны файлы domain.csr, domain.key, signed.crt)  
-```/usr/bin/rsync -az --copy-links /path/to/folde/https-portal-data/<DOMAINNAME>/production/ USERNAME@HOSTNAME:/path/to/folder/CommuniGate_DATA/path/to/cert/```
+```/usr/bin/rsync -a --copy-links /path/to/folde/https-portal-data/<DOMAINNAME>/production/ USERNAME@HOSTNAME:/path/to/folder/CommuniGate_DATA/path/to/cert/```
 - Добавляем в cron
 
 #### На хосте CGP
