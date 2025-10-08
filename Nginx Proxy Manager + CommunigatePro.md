@@ -11,52 +11,5 @@
 ```openssl pkey -in <path to folder>/nginx-proxy-manager/letsencrypt/live/npm-18/privkey4.pem -text```  
 
 ### Скрипт для добавления в CommunigatePro  
-```#!/bin/sh
+можно найти на [Communigate-Pro-Lets-Encrypt-MS-ActiveDirectory](./Readme.md)  
 
-# файл ключа
-private_key=/var/CommuniGate/script/fromLetsEncrypt/privkey.pem
-
-# файл сертификата
-cert=/var/CommuniGate/script/fromLetsEncrypt/cert.pem
-
-# файл цепочки
-fullchain=/var/CommuniGate/script/fromLetsEncrypt/fullchain.pem
-
-# имя домена
-domain_name=mail.domain.ru
-# пользователь с правами достаточными для управления ключами
-postmaster_name=postmaster@${domain_name}
-postmaster_password=PSSwoRD
-# адрес сервера
-ip_cgp_server=127.0.0.1
-
-# Готовим ключ
-echo -n "Add private key .."
-private_secure_key=`openssl rsa -in ${private_key}  2> /dev/null | grep -v '\-\-' | tr -d '\n'`
-# Добавляем ключ
-curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
-  --data-urlencode "command=updatedomainsettings ${domain_name} \
-  {PrivateSecureKey=[${private_secure_key}];}"
-echo ".done."
-
-# Готовим сертификат
-echo -n "Add cert .."
-# только первый сертификат
-secure_sertificate=`cat ${cert=} | sed '/-----END CERTIFICATE-----/q' | grep -v '\-\-' | tr -d '\n'`
-
-# Добавляем сертификат
-curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
-  --data-urlencode "command=updatedomainsettings ${domain_name} \
-  {SecureCertificate=[${secure_sertificate}];}"
-echo ".done."
-
-# Готовим цепочку
-echo -n "Add full chain .."
-fullchain=`grep -v '\-\-' ${fullchain} | tr -d '\n'`
-# Добавляем цепочку
-curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
-  --data-urlencode "command=updatedomainsettings ${domain_name} \
-  {CAChain=[${fullchain}];}"
-echo ".done."
-exit 0
-```
