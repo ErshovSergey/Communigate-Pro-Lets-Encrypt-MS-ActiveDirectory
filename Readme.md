@@ -10,38 +10,54 @@
 #!/bin/sh
 
 # файл ключа
-le_key=<path to/le-key.pem
-# файл сертификата
-le_crt=<path to/le-crt.pem
-# файл цепочки 
-le_chain_crt=<path to/le-chain-crt.pem
+private_key=/var/CommuniGate/script/fromLetsEncrypt/privkey.pem
 
+# файл сертификата
+cert=/var/CommuniGate/script/fromLetsEncrypt/cert.pem
+
+# файл цепочки
+fullchain=/var/CommuniGate/script/fromLetsEncrypt/fullchain.pem
+
+# имя домена
 domain_name=<domain_name>
+# пользователь с правами достаточными для управления ключами
 postmaster_name=postmaster@${domain_name}
 postmaster_password=<password>
 
+# адрес сервера
+ip_cgp_server=127.0.0.1
+
 # Готовим ключ
-private_secure_key=`openssl rsa -in ${le_key} 2> /dev/null | grep -v '\-\-' | tr -d '\n'`
+private_secure_key=`openssl rsa -in ${private_key} -traditional 2> /dev/null | grep -v '\-\-' | tr -d '\n'`
 
 # Добавляем ключ
-curl -u postmaster:$postmaster_password -k 'https://127.0.0.1:9100/cli/' \
---data-urlencode "command=updatedomainsettings ${domain_name} \
-{PrivateSecureKey=[${private_secure_key}];}"
+echo -n "Add private key .." && \
+curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
+  --data-urlencode "command=updatedomainsettings ${domain_name} \
+  {PrivateSecureKey=[${private_secure_key}];}" && \
+echo ".done."
 
-# Готовим сертификат
-secure_sertificate=`cat ${le_crt=} | grep -B1000 'BEGIN CERTIFICATE' | grep -B1000 'END ' | grep -v '\-\-' | tr -d '\n'`
+# Готовим только первый сертификат
+secure_sertificate=`cat ${cert=} | sed '/-----END CERTIFICATE-----/q' | grep -v '\-\-' | tr -d '\n'`
 
-# Добавляем сертификат
-curl -u postmaster:$postmaster_password -k 'https://127.0.0.1:9100/cli/' \
---data-urlencode "command=updatedomainsettings ${domain_name} \
-{SecureCertificate=[${secure_sertificate}];}"
+# Добавляем только первый сертификат
+echo -n "Add cert .." && \
+curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
+  --data-urlencode "command=updatedomainsettings ${domain_name} \
+  {SecureCertificate=[${secure_sertificate}];}" && \
+echo ".done."
 
 # Готовим цепочку
-le_chain_crt=`grep -v '\-\-' ${le_chain_crt} | tr -d '\n'`
+fullchain=`grep -v '\-\-' ${fullchain} | tr -d '\n'`
+
 # Добавляем цепочку
-curl -u postmaster:$postmaster_password -k 'https://127.0.0.1:9100/cli/' \
---data-urlencode "command=updatedomainsettings ${domain_name} \
-{CAChain=[${le_chain_crt}];}"
+echo -n "Add full chain .."&& \
+curl -u $postmaster_name:$postmaster_password -k "http://$ip_cgp_server:8100/cli/" \
+  --data-urlencode "command=updatedomainsettings ${domain_name} \
+  {CAChain=[${fullchain}];}"&& \
+echo ".done."
+
+exit 0
 ```
 
 ### Расписание
